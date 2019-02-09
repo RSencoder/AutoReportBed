@@ -1,5 +1,4 @@
 # AutoReportBed
-***
 This is a script running at WeChat-web which aims at sending bed-checking message at a certain time.
 
 网页端微信自动报寝脚本，在设定的时间自动向特定群组发送报寝信息。
