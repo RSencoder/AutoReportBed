@@ -48,8 +48,19 @@ secondInput.value = selectFrom(0, 59);
  */
 function getwxInput() {
     wxPreInput = document.querySelector("#editArea");  //网页端微信消息输入框
-    wxPreInput.normalize();  //规范化文本节点，因为鼠标点击现有文本后会切割文本节点，需要使用normalize()方法合并为一个文本节点
-    return wxPreInput.firstChild.nodeValue;
+    // 处理文本节点和<br>换行元素，原来的normalize()方法没考虑到<br>
+    let list = wxPreInput.childNodes;
+    let i;
+    let wxInput = "";
+    for (i = 0; i < list.length; i++) {
+        if (list[i].nodeType === 3) {
+            wxInput += list[i].nodeValue;
+        }
+        if (list[i] instanceof  HTMLBRElement) {
+            wxInput += "\n";
+        }
+    }
+    return wxInput;
 }
 
 /*
