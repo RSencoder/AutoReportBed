@@ -25,4 +25,5 @@ This is a script running at WeChat-web which aims at sending bed-checking messag
 ## 注意事项
 
 + 如果定时发送时刻早于现在时刻，按下确认按钮就会立即发送。
-+ 保持网页的持续活动
++ 保持网页的持续活动。
++ 只在firefox下进行充分测试。
