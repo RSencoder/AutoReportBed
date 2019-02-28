@@ -143,16 +143,18 @@ var btnConfirmHandler = function () {
     }, triggerTime - now);
 
     totalms = triggerTime - now;
-    //间歇调用，更新倒计时控件
-    intervalID = setInterval(function () {
+
+    //超时调用模拟间歇调用，更新倒计时控件
+    function updateCountDown() {
         if (totalms / 1000 > 1) {
             countDown.firstChild.nodeValue = formatCountDown(totalms);
+            setTimeout(updateCountDown, 1000);
         } else {
             countDown.firstChild.nodeValue = "时间到！";
-            clearInterval(intervalID);
         }
         totalms -= 1000;
-    }, 1000);
+    }
+    setTimeout(updateCountDown, 1000);
 
     hasSchedued = true;
 };
