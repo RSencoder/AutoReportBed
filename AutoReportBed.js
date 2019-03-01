@@ -1,4 +1,15 @@
 /*
+ * 目前观察到一个bug：在进行长时间倒计时的过程中，如果切换到其他页面或者其他程序一段时间，切回来看倒计时变慢了，
+ * 现在的时刻加上倒计时的时间超过了预定发送时间。估计是setInterval()方法无法保证每次都按时调用，中间或多或少没有调用导致totalms
+ * 没有真正地每秒减去1000，所以倒计时变慢。
+ * 猜想的解决办法：按照书里说的，使用setTimeout()方法模拟setInterval()方法，可能会增大每次按时调用的成功率。
+ *
+ * 经测试，还是没有解决。。。
+ */
+
+
+
+/*
  * 添加自动报寝控件
  */
 var newAction = document.querySelector(".action");
@@ -21,9 +32,9 @@ if (document.querySelector(".bed-sending-status") == null) {
  */
 var wxPreInput = document.querySelector("#editArea");  //网页端微信消息输入框
 wxPreInput.innerHTML = "150342A晚查寝：\n" +
-    "男生：应到18人，实到18人\n" +
+    "男生：应到17人，实到17人\n" +
     "女生：应到22人，实到22人\n" +
-    "共计：应到40人，实到40人";
+    "共计：应到39人，实到39人";
 
 /*
  * 在一定范围内选择一个随机数
@@ -98,7 +109,7 @@ var btnConfirm = document.querySelector("#confirm");
 var btnCancel = document.querySelector("#cancel");
 
 var timeoutID = 777;  //设置超时时间，以便未来取消超时调用
-var intervalID = 666;  //间歇调用ID，以便未来取消间歇调用
+var timeoutID2 = 666;  //间歇调用ID，以便未来取消间歇调用
 var totalms = -1;  //从点击确认按钮到发送时刻的总毫秒数
 var countDown = document.querySelector(".count-down");  //倒计时控件
 
@@ -148,7 +159,7 @@ var btnConfirmHandler = function () {
     function updateCountDown() {
         if (totalms / 1000 > 1) {
             countDown.firstChild.nodeValue = formatCountDown(totalms);
-            setTimeout(updateCountDown, 1000);
+            timeoutID2 = setTimeout(updateCountDown, 1000);
         } else {
             countDown.firstChild.nodeValue = "时间到！";
         }
@@ -166,7 +177,7 @@ var btnCancelHandler = function () {
     }
 
     clearTimeout(timeoutID);
-    clearInterval(intervalID);
+    clearTimeout(timeoutID2);
     countDown.firstChild.nodeValue = "未计划";
     hasSchedued = false;
 };
